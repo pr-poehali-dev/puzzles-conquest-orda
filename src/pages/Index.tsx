@@ -39,6 +39,10 @@ interface ChatMessage {
   role: Role;
   text: string;
   time: string;
+  mediaUrl?: string;
+  mediaType?: "image" | "video";
+  translated?: string;
+  translating?: boolean;
 }
 
 interface Event {
@@ -106,12 +110,39 @@ const eventBgColor: Record<Event["type"], string> = {
   build: "bg-blue-500/20",
 };
 
+const LANG_OPTIONS = [
+  { code: "ru", label: "🇷🇺 Русский" },
+  { code: "en", label: "🇬🇧 English" },
+  { code: "de", label: "🇩🇪 Deutsch" },
+  { code: "fr", label: "🇫🇷 Français" },
+  { code: "zh", label: "🇨🇳 中文" },
+  { code: "tr", label: "🇹🇷 Türkçe" },
+  { code: "uk", label: "🇺🇦 Українська" },
+  { code: "pl", label: "🇵🇱 Polski" },
+  { code: "es", label: "🇪🇸 Español" },
+  { code: "ar", label: "🇸🇦 العربية" },
+];
+
+async function translateText(text: string, targetLang: string): Promise<string> {
+  try {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=auto|${targetLang}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.responseStatus === 200) return data.responseData.translatedText;
+    return text;
+  } catch {
+    return text;
+  }
+}
+
 export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState(initMessages);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [notifications, setNotifications] = useState(3);
+  const [translateLang, setTranslateLang] = useState("ru");
+  const [showLangMenu, setShowLangMenu] = useState(false);
 
   const navItems: { id: Tab; label: string; icon: string }[] = [
     { id: "home", label: "Главная", icon: "Home" },
@@ -126,14 +157,42 @@ export default function Index() {
   const sendMessage = () => {
     if (!chatInput.trim()) return;
     const newMsg: ChatMessage = {
-      id: messages.length + 1,
+      id: Date.now(),
       author: "Ты",
       role: "member",
       text: chatInput,
       time: new Date().toLocaleTimeString("ru", { hour: "2-digit", minute: "2-digit" }),
     };
-    setMessages([...messages, newMsg]);
+    setMessages((prev) => [...prev, newMsg]);
     setChatInput("");
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const isVideo = file.type.startsWith("video/");
+    const newMsg: ChatMessage = {
+      id: Date.now(),
+      author: "Ты",
+      role: "member",
+      text: isVideo ? "📹 Видео" : "🖼️ Фото",
+      mediaUrl: url,
+      mediaType: isVideo ? "video" : "image",
+      time: new Date().toLocaleTimeString("ru", { hour: "2-digit", minute: "2-digit" }),
+    };
+    setMessages((prev) => [...prev, newMsg]);
+    e.target.value = "";
+  };
+
+  const handleTranslate = async (msgId: number, text: string) => {
+    setMessages((prev) =>
+      prev.map((m) => m.id === msgId ? { ...m, translating: true } : m)
+    );
+    const translated = await translateText(text, translateLang);
+    setMessages((prev) =>
+      prev.map((m) => m.id === msgId ? { ...m, translated, translating: false } : m)
+    );
   };
 
   return (
@@ -428,14 +487,42 @@ export default function Index() {
         {/* ЧАТ */}
         {activeTab === "chat" && (
           <div className="animate-fade-in flex flex-col" style={{ height: "calc(100vh - 200px)" }}>
-            <div className="flex items-center justify-between mb-4">
+            {/* Шапка чата */}
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-xl font-black tracking-widest text-white">ЧАТ ОРДЫ</h2>
-              <div className="text-xs text-slate-500 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500" />
-                4 онлайн
+              <div className="flex items-center gap-3">
+                {/* Переводчик */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowLangMenu((v) => !v)}
+                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-[#12141a] border border-slate-700 rounded-lg text-slate-300 hover:border-amber-500/50 hover:text-amber-400 transition-colors font-bold"
+                  >
+                    <Icon name="Languages" size={13} />
+                    {LANG_OPTIONS.find(l => l.code === translateLang)?.label.split(" ")[0]}
+                    <Icon name="ChevronDown" size={12} />
+                  </button>
+                  {showLangMenu && (
+                    <div className="absolute right-0 top-full mt-1 bg-[#12141a] border border-slate-700 rounded-xl shadow-xl z-50 py-1 min-w-[160px]">
+                      {LANG_OPTIONS.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => { setTranslateLang(lang.code); setShowLangMenu(false); }}
+                          className={`w-full text-left px-4 py-2 text-xs hover:bg-slate-800 transition-colors font-sans ${translateLang === lang.code ? "text-amber-400" : "text-slate-300"}`}
+                        >
+                          {lang.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="text-xs text-slate-500 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  онлайн
+                </div>
               </div>
             </div>
 
+            {/* Сообщения */}
             <div className="flex-1 bg-[#12141a] border border-slate-800 rounded-xl p-4 overflow-y-auto mb-3">
               {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
@@ -456,9 +543,33 @@ export default function Index() {
                           <span className="text-[10px] text-slate-600">{roleLabels[msg.role]}</span>
                           <span className="text-[10px] text-slate-700 ml-auto">{msg.time}</span>
                         </div>
-                        <div className="text-sm text-slate-300 bg-[#0a0b0f] rounded-xl rounded-tl-none px-3 py-2 border border-slate-800/50 font-sans">
-                          {msg.text}
+                        <div className="bg-[#0a0b0f] rounded-xl rounded-tl-none border border-slate-800/50 overflow-hidden">
+                          {msg.mediaUrl && msg.mediaType === "image" && (
+                            <img src={msg.mediaUrl} alt="фото" className="max-w-[260px] max-h-48 object-cover rounded-t-xl" />
+                          )}
+                          {msg.mediaUrl && msg.mediaType === "video" && (
+                            <video src={msg.mediaUrl} controls className="max-w-[260px] max-h-48 rounded-t-xl" />
+                          )}
+                          <div className="px-3 py-2 text-sm text-slate-300 font-sans">{msg.text}</div>
+                          {/* Перевод */}
+                          {msg.translated && (
+                            <div className="px-3 pb-2 text-xs text-amber-400/80 font-sans border-t border-slate-800 pt-1.5 italic">
+                              🌐 {msg.translated}
+                            </div>
+                          )}
+                          {msg.translating && (
+                            <div className="px-3 pb-2 text-xs text-slate-600 font-sans">переводим...</div>
+                          )}
                         </div>
+                        {!msg.translated && !msg.translating && (
+                          <button
+                            onClick={() => handleTranslate(msg.id, msg.text)}
+                            className="mt-1 text-[10px] text-slate-600 hover:text-amber-400 transition-colors flex items-center gap-1"
+                          >
+                            <Icon name="Languages" size={10} />
+                            перевести
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -466,7 +577,21 @@ export default function Index() {
               )}
             </div>
 
+            {/* Ввод */}
             <div className="flex gap-2">
+              <input
+                type="file"
+                accept="image/*,video/*"
+                className="hidden"
+                id="chat-file-input"
+                onChange={handleFileUpload}
+              />
+              <label
+                htmlFor="chat-file-input"
+                className="px-3 py-3 bg-[#12141a] border border-slate-800 rounded-xl text-slate-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors cursor-pointer flex items-center"
+              >
+                <Icon name="Paperclip" size={16} />
+              </label>
               <input
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
