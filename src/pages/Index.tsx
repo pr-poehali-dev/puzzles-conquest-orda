@@ -50,45 +50,15 @@ interface Event {
   description: string;
 }
 
-const members: Member[] = [
-  { id: 1, name: "ВождьОрды", role: "admin", power: "125.4M", kills: "8.2M", avatar: "👑", online: true, achievements: ["Победитель KvK", "Топ-1 альянса", "Легенда"] },
-  { id: 2, name: "ЧёрныйВолк", role: "commander", power: "98.7M", kills: "5.6M", avatar: "⚔️", online: true, achievements: ["Полководец", "100 войн"] },
-  { id: 3, name: "КровавыйРассвет", role: "commander", power: "87.3M", kills: "4.1M", avatar: "🛡️", online: false, achievements: ["Защитник", "50 войн"] },
-  { id: 4, name: "ТёмныйМаг", role: "member", power: "54.2M", kills: "2.3M", avatar: "🔮", online: true, achievements: ["Маг альянса"] },
-  { id: 5, name: "СтальнойКулак", role: "member", power: "41.8M", kills: "1.9M", avatar: "🗡️", online: false, achievements: ["Воин"] },
-  { id: 6, name: "НочнойОхотник", role: "member", power: "38.5M", kills: "1.5M", avatar: "🏹", online: true, achievements: ["Лучник"] },
-];
+const members: Member[] = [];
 
-const news: NewsItem[] = [
-  { id: 1, title: "Победа в KvK! Орда непобедима!", text: "Альянс Орда одержал сокрушительную победу в межсерверной войне. Уничтожено 42 миллиона войск противника. Трофеи разделены между участниками.", date: "23 мар 2026", author: "ВождьОрды", type: "war" },
-  { id: 2, title: "Объявляется набор в альянс", text: "Принимаем игроков с мощью от 30M. Требования: активность ежедневно, участие в войнах альянса, донат в R5 по запросу.", date: "20 мар 2026", author: "ЧёрныйВолк", type: "announce" },
-  { id: 3, title: "Событие: Осада крепости", text: "В эту субботу в 20:00 МСК стартует осада вражеской крепости. Все участники обязаны быть онлайн. Сбор у координат 444:888.", date: "18 мар 2026", author: "ВождьОрды", type: "event" },
-];
+const news: NewsItem[] = [];
 
-const gallery: GalleryItem[] = [
-  { id: 1, url: HERO_BG, caption: "Наша крепость непреступна", author: "ВождьОрды" },
-  { id: 2, url: HERO_BG, caption: "KvK — финальная битва", author: "ЧёрныйВолк" },
-  { id: 3, url: HERO_BG, caption: "Победный марш Орды", author: "КровавыйРассвет" },
-  { id: 4, url: HERO_BG, caption: "Захват вражеского замка", author: "ТёмныйМаг" },
-  { id: 5, url: HERO_BG, caption: "Тренировочный рейд", author: "СтальнойКулак" },
-  { id: 6, url: HERO_BG, caption: "Союзники Орды", author: "НочнойОхотник" },
-];
+const gallery: GalleryItem[] = [];
 
-const initMessages: ChatMessage[] = [
-  { id: 1, author: "ВождьОрды", role: "admin", text: "Братья, сбор в 20:00! Война начинается!", time: "19:42" },
-  { id: 2, author: "ЧёрныйВолк", role: "commander", text: "Готов! Войска в строю, жду команды.", time: "19:44" },
-  { id: 3, author: "ТёмныйМаг", role: "member", text: "Магия заряжена, иду!", time: "19:45" },
-  { id: 4, author: "НочнойОхотник", role: "member", text: "Уже онлайн, координаты получил 🏹", time: "19:47" },
-  { id: 5, author: "КровавыйРассвет", role: "commander", text: "Фланг прикрыт, выдвигаемся по сигналу.", time: "19:49" },
-  { id: 6, author: "ВождьОрды", role: "admin", text: "Орда непобедима! Вперёд на врага! ⚔️", time: "19:51" },
-];
+const initMessages: ChatMessage[] = [];
 
-const events: Event[] = [
-  { id: 1, title: "Межсерверная война KvK", date: "28 мар", time: "20:00", type: "kvk", description: "Финальная фаза KvK. Обязательное участие для всех." },
-  { id: 2, title: "Осада крепости S4", date: "25 мар", time: "21:00", type: "war", description: "Атакуем замок сервера 4. Сбор у р5." },
-  { id: 3, title: "Ралли на босса", date: "24 мар", time: "18:00", type: "rally", description: "5 ралли на мирового босса. Лут поровну." },
-  { id: 4, title: "Событие строительства", date: "26 мар", time: "00:00", type: "build", description: "Срочно строимся. Очки идут в зачёт альянса." },
-];
+const events: Event[] = [];
 
 const roleColors: Record<Role, string> = {
   admin: "text-amber-400",
@@ -256,49 +226,41 @@ export default function Index() {
               ))}
             </div>
 
-            <div>
-              <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
-                <Icon name="Newspaper" size={12} />
-                Последние новости
-              </div>
-              <div className="space-y-3">
-                {news.slice(0, 2).map((item) => (
-                  <div key={item.id} className="bg-[#12141a] border border-slate-800 rounded-xl p-4 hover:border-red-900/50 transition-colors">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="font-bold text-sm text-white">{item.title}</div>
-                        <div className="text-xs text-slate-500 mt-1 line-clamp-2">{item.text}</div>
-                      </div>
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-bold flex-shrink-0 ${
-                        item.type === "war" ? "border-red-500/40 text-red-400 bg-red-500/10" :
-                        item.type === "event" ? "border-amber-500/40 text-amber-400 bg-amber-500/10" :
-                        "border-blue-500/40 text-blue-400 bg-blue-500/10"
-                      }`}>
-                        {item.type === "war" ? "Война" : item.type === "event" ? "Событие" : "Анонс"}
-                      </span>
+            {news.length > 0 && (
+              <div>
+                <div className="text-xs text-slate-500 uppercase tracking-widest font-bold mb-3 flex items-center gap-2">
+                  <Icon name="Newspaper" size={12} />
+                  Последние новости
+                </div>
+                <div className="space-y-3">
+                  {news.slice(0, 2).map((item) => (
+                    <div key={item.id} className="bg-[#12141a] border border-slate-800 rounded-xl p-4">
+                      <div className="font-bold text-sm text-white">{item.title}</div>
+                      <div className="text-[10px] text-slate-600 mt-1">{item.date} · {item.author}</div>
                     </div>
-                    <div className="text-[10px] text-slate-600 mt-2">{item.date} · {item.author}</div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className={`border rounded-xl p-4 ${eventColors[events[0].type]}`}>
-              <div className="text-xs text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-                <Icon name="CalendarDays" size={12} />
-                Ближайшее событие
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-white">{events[0].title}</div>
-                  <div className="text-xs text-slate-400 mt-1">{events[0].description}</div>
+            {events.length > 0 && (
+              <div className={`border rounded-xl p-4 ${eventColors[events[0].type]}`}>
+                <div className="text-xs text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+                  <Icon name="CalendarDays" size={12} />
+                  Ближайшее событие
                 </div>
-                <div className="text-right flex-shrink-0 ml-4">
-                  <div className="text-amber-400 font-bold">{events[0].date}</div>
-                  <div className="text-xs text-slate-400">{events[0].time} МСК</div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-white">{events[0].title}</div>
+                    <div className="text-xs text-slate-400 mt-1">{events[0].description}</div>
+                  </div>
+                  <div className="text-right flex-shrink-0 ml-4">
+                    <div className="text-amber-400 font-bold">{events[0].date}</div>
+                    <div className="text-xs text-slate-400">{events[0].time} МСК</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -311,41 +273,26 @@ export default function Index() {
                 + Добавить
               </button>
             </div>
-            <div className="space-y-4">
-              {news.map((item) => (
-                <div key={item.id} className="bg-[#12141a] border border-slate-800 rounded-xl overflow-hidden hover:border-red-900/50 transition-all">
-                  <div className={`h-1 ${item.type === "war" ? "bg-red-600" : item.type === "event" ? "bg-amber-500" : "bg-blue-500"}`} />
-                  <div className="p-5">
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <h3 className="font-bold text-white text-base">{item.title}</h3>
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-bold flex-shrink-0 ${
-                        item.type === "war" ? "border-red-500/40 text-red-400 bg-red-500/10" :
-                        item.type === "event" ? "border-amber-500/40 text-amber-400 bg-amber-500/10" :
-                        "border-blue-500/40 text-blue-400 bg-blue-500/10"
-                      }`}>
-                        {item.type === "war" ? "⚔️ Война" : item.type === "event" ? "🎯 Событие" : "📣 Анонс"}
-                      </span>
-                    </div>
-                    <p className="text-slate-400 text-sm leading-relaxed">{item.text}</p>
-                    <div className="flex items-center gap-3 mt-4 pt-3 border-t border-slate-800">
-                      <span className="text-amber-400 text-xs font-bold">👤 {item.author}</span>
-                      <span className="text-slate-600 text-xs">{item.date}</span>
-                      <div className="flex gap-3 ml-auto">
-                        <button className="text-slate-500 hover:text-red-400 transition-colors">
-                          <Icon name="Heart" size={14} />
-                        </button>
-                        <button className="text-slate-500 hover:text-blue-400 transition-colors">
-                          <Icon name="MessageSquare" size={14} />
-                        </button>
-                        <button className="text-slate-500 hover:text-green-400 transition-colors">
-                          <Icon name="Share2" size={14} />
-                        </button>
-                      </div>
+            {news.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="text-4xl mb-4">📰</div>
+                <div className="text-slate-500 font-bold tracking-wider">Новостей пока нет</div>
+                <div className="text-xs text-slate-700 mt-1">Нажми «Добавить», чтобы опубликовать первую</div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {news.map((item) => (
+                  <div key={item.id} className="bg-[#12141a] border border-slate-800 rounded-xl overflow-hidden">
+                    <div className={`h-1 ${item.type === "war" ? "bg-red-600" : item.type === "event" ? "bg-amber-500" : "bg-blue-500"}`} />
+                    <div className="p-5">
+                      <h3 className="font-bold text-white text-base mb-2">{item.title}</h3>
+                      <p className="text-slate-400 text-sm leading-relaxed">{item.text}</p>
+                      <div className="text-[10px] text-slate-600 mt-3">{item.date} · {item.author}</div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -366,18 +313,26 @@ export default function Index() {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {gallery.map((item) => (
-                <div key={item.id} className="group relative rounded-xl overflow-hidden border border-slate-800 hover:border-red-900/50 transition-all cursor-pointer aspect-video">
-                  <img src={item.url} alt={item.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-200">
-                    <div className="text-xs text-white font-bold">{item.caption}</div>
-                    <div className="text-[10px] text-slate-400">{item.author}</div>
+            {gallery.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="text-4xl mb-4">🖼️</div>
+                <div className="text-slate-500 font-bold tracking-wider">Галерея пуста</div>
+                <div className="text-xs text-slate-700 mt-1">Загружай скрины и видео из игры</div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {gallery.map((item) => (
+                  <div key={item.id} className="group relative rounded-xl overflow-hidden border border-slate-800 hover:border-red-900/50 transition-all cursor-pointer aspect-video">
+                    <img src={item.url} alt={item.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-200">
+                      <div className="text-xs text-white font-bold">{item.caption}</div>
+                      <div className="text-[10px] text-slate-400">{item.author}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -434,31 +389,39 @@ export default function Index() {
               </div>
             )}
 
-            <div className="space-y-2">
-              {members.map((m) => (
-                <div key={m.id} className="bg-[#12141a] border border-slate-800 rounded-xl p-4 flex items-center gap-4 hover:border-red-900/50 transition-all cursor-pointer" onClick={() => setSelectedMember(m)}>
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-full bg-[#1a1d24] border border-slate-700 flex items-center justify-center text-2xl">
-                      {m.avatar}
+            {members.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="text-4xl mb-4">⚔️</div>
+                <div className="text-slate-500 font-bold tracking-wider">Участников пока нет</div>
+                <div className="text-xs text-slate-700 mt-1">Пригласи воинов в альянс</div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {members.map((m) => (
+                  <div key={m.id} className="bg-[#12141a] border border-slate-800 rounded-xl p-4 flex items-center gap-4 hover:border-red-900/50 transition-all cursor-pointer" onClick={() => setSelectedMember(m)}>
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-full bg-[#1a1d24] border border-slate-700 flex items-center justify-center text-2xl">
+                        {m.avatar}
+                      </div>
+                      {m.online && <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-[#12141a]" />}
                     </div>
-                    {m.online && <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-[#12141a]" />}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-white text-sm truncate">{m.name}</span>
+                        <span className={`text-xs px-2 py-0.5 rounded-full border font-bold ${roleBadge[m.role]}`}>
+                          {roleLabels[m.role]}
+                        </span>
+                      </div>
+                      <div className="flex gap-4 mt-1">
+                        <span className="text-xs text-slate-500">⚡ {m.power}</span>
+                        <span className="text-xs text-slate-500">⚔️ {m.kills}</span>
+                      </div>
+                    </div>
+                    <Icon name="ChevronRight" size={14} className="text-slate-600 flex-shrink-0" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-white text-sm truncate">{m.name}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-bold ${roleBadge[m.role]}`}>
-                        {roleLabels[m.role]}
-                      </span>
-                    </div>
-                    <div className="flex gap-4 mt-1">
-                      <span className="text-xs text-slate-500">⚡ {m.power}</span>
-                      <span className="text-xs text-slate-500">⚔️ {m.kills}</span>
-                    </div>
-                  </div>
-                  <Icon name="ChevronRight" size={14} className="text-slate-600 flex-shrink-0" />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -473,24 +436,34 @@ export default function Index() {
               </div>
             </div>
 
-            <div className="flex-1 bg-[#12141a] border border-slate-800 rounded-xl p-4 overflow-y-auto space-y-3 mb-3">
-              {messages.map((msg) => (
-                <div key={msg.id} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#1a1d24] border border-slate-700 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                    {msg.author[0]}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <span className={`text-xs font-bold ${roleColors[msg.role]}`}>{msg.author}</span>
-                      <span className="text-[10px] text-slate-600">{roleLabels[msg.role]}</span>
-                      <span className="text-[10px] text-slate-700 ml-auto">{msg.time}</span>
-                    </div>
-                    <div className="text-sm text-slate-300 bg-[#0a0b0f] rounded-xl rounded-tl-none px-3 py-2 border border-slate-800/50 font-sans">
-                      {msg.text}
-                    </div>
-                  </div>
+            <div className="flex-1 bg-[#12141a] border border-slate-800 rounded-xl p-4 overflow-y-auto mb-3">
+              {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center">
+                  <div className="text-4xl mb-4">💬</div>
+                  <div className="text-slate-500 font-bold tracking-wider">Чат пуст</div>
+                  <div className="text-xs text-slate-700 mt-1">Будь первым, кто напишет!</div>
                 </div>
-              ))}
+              ) : (
+                <div className="space-y-3">
+                  {messages.map((msg) => (
+                    <div key={msg.id} className="flex gap-3">
+                      <div className="w-8 h-8 rounded-full bg-[#1a1d24] border border-slate-700 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                        {msg.author[0]}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className={`text-xs font-bold ${roleColors[msg.role]}`}>{msg.author}</span>
+                          <span className="text-[10px] text-slate-600">{roleLabels[msg.role]}</span>
+                          <span className="text-[10px] text-slate-700 ml-auto">{msg.time}</span>
+                        </div>
+                        <div className="text-sm text-slate-300 bg-[#0a0b0f] rounded-xl rounded-tl-none px-3 py-2 border border-slate-800/50 font-sans">
+                          {msg.text}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">
@@ -518,33 +491,41 @@ export default function Index() {
                 Создать
               </button>
             </div>
-            <div className="space-y-3">
-              {events.map((event) => (
-                <div key={event.id} className={`border rounded-xl p-5 ${eventColors[event.type]}`}>
-                  <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${eventBgColor[event.type]}`}>
-                      <Icon name={eventIconMap[event.type]} size={20} className={eventTextColor[event.type]} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-bold text-white">{event.title}</div>
-                      <div className="text-xs text-slate-400 mt-1">{event.description}</div>
-                      <div className="flex items-center gap-3 mt-3">
-                        <span className={`text-xs font-bold ${eventTextColor[event.type]}`}>📅 {event.date}</span>
-                        <span className="text-xs text-slate-500">🕐 {event.time} МСК</span>
+            {events.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center">
+                <div className="text-4xl mb-4">📅</div>
+                <div className="text-slate-500 font-bold tracking-wider">Событий пока нет</div>
+                <div className="text-xs text-slate-700 mt-1">Создай войну или событие для альянса</div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {events.map((event) => (
+                  <div key={event.id} className={`border rounded-xl p-5 ${eventColors[event.type]}`}>
+                    <div className="flex items-start gap-4">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${eventBgColor[event.type]}`}>
+                        <Icon name={eventIconMap[event.type]} size={20} className={eventTextColor[event.type]} />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-bold text-white">{event.title}</div>
+                        <div className="text-xs text-slate-400 mt-1">{event.description}</div>
+                        <div className="flex items-center gap-3 mt-3">
+                          <span className={`text-xs font-bold ${eventTextColor[event.type]}`}>📅 {event.date}</span>
+                          <span className="text-xs text-slate-500">🕐 {event.time} МСК</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2 flex-shrink-0">
+                        <button className="text-xs px-3 py-1.5 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-colors font-bold">
+                          Иду ✓
+                        </button>
+                        <button className="text-xs px-3 py-1.5 bg-black/20 border border-white/10 text-slate-300 rounded-lg hover:bg-black/30 transition-colors font-bold">
+                          🔔
+                        </button>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2 flex-shrink-0">
-                      <button className="text-xs px-3 py-1.5 bg-white/10 border border-white/20 text-white rounded-lg hover:bg-white/20 transition-colors font-bold">
-                        Иду ✓
-                      </button>
-                      <button className="text-xs px-3 py-1.5 bg-black/20 border border-white/10 text-slate-300 rounded-lg hover:bg-black/30 transition-colors font-bold">
-                        🔔
-                      </button>
-                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
