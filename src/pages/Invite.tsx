@@ -146,17 +146,10 @@ export default function Invite() {
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mb-6">
-              {[
-                { icon: "Users", label: "28 воинов", color: "text-blue-400" },
-                { icon: "Crown", label: "7 побед KvK", color: "text-amber-400" },
-                { icon: "Sword", label: "42M убийств", color: "text-red-400" },
-              ].map((s) => (
-                <div key={s.label} className="bg-[#0a0b0f] rounded-xl p-3 text-center border border-slate-800">
-                  <Icon name={s.icon} size={18} className={`${s.color} mx-auto mb-1`} />
-                  <div className="text-[11px] text-slate-400 leading-tight">{s.label}</div>
-                </div>
-              ))}
+            <div className="flex justify-center gap-6 text-3xl mb-6">
+              <span>⚔️</span>
+              <span>🛡️</span>
+              <span>👑</span>
             </div>
 
             <div className="text-center">

@@ -225,7 +225,7 @@ export default function Index() {
             </button>
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-slate-400 text-xs">4 онлайн</span>
+              <span className="text-slate-400 text-xs">{members.filter(m => m.online).length} онлайн</span>
             </div>
             <div className="text-xs px-3 py-1.5 rounded border border-amber-500/40 bg-amber-500/10 text-amber-400 font-bold tracking-wider">
               👑 Вождь
@@ -272,10 +272,10 @@ export default function Index() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { label: "Участников", value: "28", icon: "Users", color: "text-blue-400" },
-                { label: "Мощь альянса", value: "1.2B", icon: "Zap", color: "text-amber-400" },
-                { label: "Убийств", value: "42M", icon: "Sword", color: "text-red-400" },
-                { label: "Побед KvK", value: "7", icon: "Crown", color: "text-purple-400" },
+                { label: "Участников", value: members.length.toString(), icon: "Users", color: "text-blue-400" },
+                { label: "Новостей", value: news.length.toString(), icon: "Newspaper", color: "text-amber-400" },
+                { label: "Событий", value: events.length.toString(), icon: "CalendarDays", color: "text-red-400" },
+                { label: "В галерее", value: gallery.length.toString(), icon: "Image", color: "text-purple-400" },
               ].map((stat) => (
                 <div key={stat.label} className="bg-[#12141a] border border-slate-800 rounded-xl p-4 text-center hover:border-red-900/60 transition-colors">
                   <Icon name={stat.icon} size={20} className={`${stat.color} mx-auto mb-2`} />
